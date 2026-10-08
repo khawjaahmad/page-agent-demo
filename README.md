@@ -131,24 +131,32 @@ Available actions:
 
 ### 4. React Integration
 
-The `AIAgentButton` component wraps the page-agent instance:
+The `AIAgentButton` component toggles the built-in panel. The agent is created lazily, and recreated if the panel's close button disposed it:
 
 ```tsx
-<button onClick={() => agent?.start()}>
-  Ask AI
-</button>
+const { panel } = getOrCreatePageAgent(() => setIsPanelOpen(false));
+panel.show();
 ```
+
+To run a task programmatically instead of through the panel, call `await agent.execute('Buy a student ticket')`.
 
 ## Configuration Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `baseURL` | `string` | *(required)* | LLM API endpoint |
-| `apiKey` | `string` | *(required)* | API key for LLM provider |
+| `apiKey` | `string` | — | API key for LLM provider (optional for local/keyless endpoints) |
 | `model` | `string` | *(required)* | Model name |
 | `language` | `string` | `'en-US'` | Locale for responses |
-| `enableMask` | `boolean` | `false` | Enable visual element highlighting |
+| `enableMask` | `boolean` | `true` | Block user input with an overlay while the agent acts |
 | `viewportExpansion` | `number` | `0` | Padding around viewport |
+| `maxSteps` | `number` | `40` | Maximum agent steps per task |
+| `stepDelay` | `number` | `0.4` | Delay between steps, in seconds |
+| `customTools` | `Record<string, PageAgentTool \| null>` | — | Add, override, or remove (`null`) agent tools |
+| `transformPageContent` | `(content) => string` | — | Inspect or mask page content before it is sent to the LLM |
+| `transformRequestBody` | `(body) => object` | — | Provider-specific request tweaks (replaces the deprecated `temperature`) |
+
+See the [page-agent docs](https://alibaba.github.io/page-agent/docs/introduction/overview) for the full list.
 
 ## Project Structure
 
@@ -167,9 +175,10 @@ src/
 
 | Technology | Version |
 |------------|---------|
-| page-agent | 1.5.6 |
-| React | 19.2.4 |
-| TypeScript | 5.x |
+| page-agent | 1.12.x |
+| React | 19.3.x |
+| TypeScript | 6.0.x |
+| Tailwind CSS | 4.3.x |
 | Vite | 8.x |
 
 ## Example Agent Interactions
