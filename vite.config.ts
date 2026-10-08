@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
 
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       onwarn(warning, warn) {
         // Suppress eval warning from page-controller library
         if (warning.code === 'EVAL') return
