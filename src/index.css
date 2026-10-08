@@ -9,6 +9,13 @@
   --color-accent-hover: #3385FF;
   --color-muted: #666666;
   --color-border: #1a1a1a;
+  --color-muted-dark: #666666;
+  --color-dark-50: #0a0a0a;
+  --color-dark-100: #111111;
+  --color-dark-200: #1a1a1a;
+  --color-dark-300: #222222;
+  --color-dark-400: #2a2a2a;
+  --color-dark-border: #222222;
 
   --font-sans: 'Fira Sans', ui-sans-serif, system-ui;
 }
