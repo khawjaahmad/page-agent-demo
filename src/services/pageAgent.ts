@@ -42,11 +42,12 @@ Click "Register Another" to start over
 };
 
 /**
- * Initialize the page-agent instance
- * Should be called once at app root
+ * Get the page-agent instance, creating it on first use.
+ * The panel's close button disposes the agent, so a fresh one is created after that.
+ * @param onDispose - Called when this instance is disposed
  */
-export function initializePageAgent(): PageAgent {
-  if (agentInstance) {
+export function getOrCreatePageAgent(onDispose?: () => void): PageAgent {
+  if (agentInstance && !agentInstance.disposed) {
     return agentInstance;
   }
 
@@ -77,14 +78,10 @@ Guidelines:
     },
   });
 
-  return agentInstance;
-}
+  if (onDispose) {
+    agentInstance.addEventListener('dispose', onDispose);
+  }
 
-/**
- * Get the existing page-agent instance
- * Returns null if not initialized
- */
-export function getPageAgent(): PageAgent | null {
   return agentInstance;
 }
 

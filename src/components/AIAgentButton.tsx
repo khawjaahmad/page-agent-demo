@@ -1,35 +1,19 @@
-import { useState, useEffect } from 'react';
-import { getPageAgent, initializePageAgent } from '../services/pageAgent';
+import { useState } from 'react';
+import { getOrCreatePageAgent } from '../services/pageAgent';
 
 export function AIAgentButton() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  useEffect(() => {
-    // Initialize page-agent on mount
-    const agent = initializePageAgent();
-
-    // Listen to status changes to sync panel state
-    const handleStatusChange = () => {
-      // Panel visibility tracking can be synced here if needed
-    };
-
-    agent.addEventListener('statuschange', handleStatusChange);
-
-    return () => {
-      agent.removeEventListener('statuschange', handleStatusChange);
-    };
-  }, []);
 
   const handleClick = () => {
-    const agent = getPageAgent();
-    if (!agent) return;
+    const { panel } = getOrCreatePageAgent(() => setIsPanelOpen(false));
+    const shouldOpen = panel.wrapper.style.display === 'none';
 
-    if (isPanelOpen) {
-      agent.panel.hide();
-      setIsPanelOpen(false);
+    if (shouldOpen) {
+      panel.show();
     } else {
-      agent.panel.show();
-      setIsPanelOpen(true);
+      panel.hide();
     }
+    setIsPanelOpen(shouldOpen);
   };
 
   return (
