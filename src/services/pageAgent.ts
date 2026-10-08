@@ -18,17 +18,20 @@ Click "Sign In" button
 
 `,
   '/tickets': `
-Before selecting a ticket, ask the user to confirm the ticket they want to purchase
-Click a ticket card to select (Early Bird $199, Student $99, VIP $499)
+Click a ticket card to select it (Early Bird $199, Student $99, VIP $499); if the user hasn't named one, ask first
+Then click "Continue to Workshops"
 `,
   '/workshops': `
-Before selecting a workshop, ask the user to confirm the workshop they want to attend
-Click "Add to Cart" button
+Click workshop cards to select or deselect them; at least one is required ("Add to Cart" is disabled until then)
+VIP tickets include all workshops automatically, so the cards can't be clicked
+If the user hasn't said which workshops, ask first
+Then click "Add to Cart"
 `,
   '/cart': `
 Review selected ticket and workshops
-Enter discount code: EARLY10, SPEAKER25, or FREEPASS
-Click "Proceed to Checkout"
+Only apply a discount code if the user gives one or agrees to one (EARLY10 = 10%, SPEAKER25 = 25%, FREEPASS = 100%): type it, then click "Apply"
+If the total is FREE, click "Complete Free Registration" (this skips payment and goes straight to confirmation)
+Otherwise click "Proceed to Checkout"
 `,
   '/checkout': `
 If total is $0: click "Complete Registration"
@@ -68,12 +71,13 @@ You are an AI assistant for the Innovate AI 2026 Conference registration website
 
 Guidelines:
 - Follow the user's instructions carefully and precisely
-- Double-check price and offer discounts
+- Double-check prices; only apply a discount code if the user gives one or agrees to one
 - Report errors immediately instead of retrying blindly
 `,
       getPageInstructions: (url: string) => {
-        const path = new URL(url).pathname;
-        return PAGE_INSTRUCTIONS[path] || PAGE_INSTRUCTIONS[path + '/'] || undefined;
+        // React Router treats "/tickets/" as "/tickets", so strip trailing slashes to match
+        const path = new URL(url).pathname.replace(/\/+$/, '') || '/';
+        return PAGE_INSTRUCTIONS[path];
       },
     },
   });
